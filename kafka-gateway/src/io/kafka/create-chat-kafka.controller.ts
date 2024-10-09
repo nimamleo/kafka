@@ -33,7 +33,6 @@ export class CreateChatKafkaController extends AbstractKafkaController {
   }
 
   async createCHat(data: Message<CreateNewChatCreate>) {
-    console.log(data.data.content);
     console.log(`new chat created ${data.data.content}`);
   }
 }
