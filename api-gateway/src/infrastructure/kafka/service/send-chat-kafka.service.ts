@@ -4,6 +4,7 @@ import { Kafka } from 'kafkajs';
 import { ISendChatWriter } from '../provider/send-chat.provider';
 import { CreateNewChatModel } from '../models/create-new-chat.model';
 import { CreateNewChatCreate } from '../../../../../common/kafka/models/create-new-chat.model';
+import { EventType } from '../../../../../common/streams/event-type.model';
 
 @Injectable()
 export class SendChatKafkaService
@@ -25,11 +26,16 @@ export class SendChatKafkaService
     return this.logger;
   }
 
+  Events(): EventType[] {
+    return [];
+  }
+
   async createNewChat(value: CreateNewChatModel): Promise<boolean> {
-    const res = await this.SendMessage<CreateNewChatCreate>(
-      'chat',
-      new CreateNewChatCreate({ content: value.content }),
-    );
+    const data = new CreateNewChatCreate({ content: value.content });
+    const res = await this.SendMessage('chat', {
+      name: data.streamName(),
+      data: data,
+    });
 
     return res;
   }
